@@ -10,13 +10,14 @@ import padlockSvg from "./assets/padlock.svg";
 import Becoo from "./assets/Becoo.png";
 import Footer from "./components/footer/Footer";
 import Swal from "sweetalert2";
+import { AiFillDelete } from "react-icons/ai";
 const url = "https://randomuser.me/api/";
 const defaultImage = "https://randomuser.me/api/portraits/men/75.jpg";
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [userList, setUserList] = useState([]);
-  const [userText, setUserText] = useState("")
-  const [temp, setTemp] = useState("")
+  const [userText, setUserText] = useState("");
+  const [temp, setTemp] = useState("");
   const fetchNewUser = async () => {
     const res = await fetch(url);
     const data = await res.json();
@@ -43,11 +44,14 @@ function App() {
       });
     }
   };
+  const removeUser = (user) => {
+    setUserList(userList.filter((u) => u !== user));
+  };
 
   return (
     <main>
       <div className="block bcg-orange">
-        <img src={Becoo} alt="B" id="B" width="60px" className="img-thumbnail rounded-5 bg-success mt-5"/>
+        <img src={Becoo} alt="B" id="B" width="60px" className="becoo-img" />
       </div>
       <div className="block">
         <div className="container">
@@ -57,17 +61,19 @@ function App() {
             className="user-img"
           />
           <p className="user-title">{userText}</p>
-          <p className="user-value">
-            {currentUser
-              ? temp
-              : "My name is..." }
-          </p>
+          <p className="user-value">{currentUser ? temp : ""}</p>
           <div className="values-list">
-            <button className="icon" data-label="name" onMouseOver={() => {
+            <button
+              className="icon"
+              data-label="name"
+              onMouseOver={() => {
                 // setCurrentUser(currentUser);
                 setUserText("My name is");
-                setTemp(currentUser?.name?.first + " " + currentUser?.name?.last);
-              }}>
+                setTemp(
+                  currentUser?.name?.first + " " + currentUser?.name?.last
+                );
+              }}
+            >
               <img
                 src={
                   currentUser && currentUser.gender === "female"
@@ -78,19 +84,26 @@ function App() {
                 id="iconImg"
               />
             </button>
-            <button className="icon" data-label="email" onMouseOver={() => {
+            <button
+              className="icon"
+              data-label="email"
+              onMouseOver={() => {
                 // setCurrentUser(currentUser);
                 setUserText("My email is");
                 setTemp(currentUser?.email);
-              }}>
+              }}
+            >
               <img src={mailSvg} alt="mail" id="iconImg" />
             </button>
-            <button className="icon" data-label="age" onMouseOver={() => {
+            <button
+              className="icon"
+              data-label="age"
+              onMouseOver={() => {
                 // setCurrentUser(currentUser);
                 setUserText("My age is");
                 setTemp(currentUser?.dob?.age);
-
-              }}>
+              }}
+            >
               <img
                 src={
                   currentUser && currentUser.gender === "female"
@@ -119,17 +132,19 @@ function App() {
                 // setCurrentUser(currentUser);
                 setUserText("My phone is");
                 setTemp(currentUser?.phone);
-
               }}
             >
               <img src={phoneSvg} alt="phone" id="iconImg" />
             </button>
-            <button className="icon" data-label="password" onMouseOver={() => {
+            <button
+              className="icon"
+              data-label="password"
+              onMouseOver={() => {
                 // setCurrentUser(currentUser);
                 setUserText("My password is");
                 setTemp(currentUser?.login?.password);
-
-              }}>
+              }}
+            >
               <img src={padlockSvg} alt="lock" id="iconImg" />
             </button>
           </div>
@@ -148,6 +163,7 @@ function App() {
                 <th className="th">Email</th>
                 <th className="th">Phone</th>
                 <th className="th">Age</th>
+                <th className="th">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +173,14 @@ function App() {
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
                   <td>{user.dob.age}</td>
+                  <td>
+                    <AiFillDelete
+                      size={22}
+                      type="button"
+                      className="delete-btn "
+                      onClick={() => removeUser(user)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
